@@ -7,8 +7,15 @@ app.use(express.urlencoded({extended:true}));
 
 app.get('/jokes', async (req, res, next) => {
   try {
-    // TODO - filter the jokes by tags and content
-    const jokes = [];
+    const { tags, content } = req.query;
+    const filter = {};
+    if (tags) {
+      filter.tags = tags;
+    }
+    if (content) {
+      filter.content = content;
+    }
+    const jokes = await Joke.find(filter);
     res.send(jokes);
   } catch (error) {
     console.error(error);
@@ -16,5 +23,4 @@ app.get('/jokes', async (req, res, next) => {
   }
 });
 
-// we export the app, not listening in here, so that we can run tests
 module.exports = app;
